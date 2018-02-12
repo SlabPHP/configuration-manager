@@ -50,4 +50,4 @@ You would have available to you the following values in your calling code:
     
 ## Library Caveats
 
-You can feel free to use this, submit bugs, contact us, or submit change requests. The SlabPHP framework is largely in maintenance mode at the moment and is in the process of being released open source under the Apache 2.0 license.
+You can feel free to use this, submit bugs, contact us, or submit change requests. The SlabPHP framework is largely in maintenance mode at the moment and is in the process of being released open source under the Apache 2.0 license. We're well aware that better alternatives exist in this day and age, please see the SlabPHP main documentation for more details. 

@@ -16,13 +16,14 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
     public function testManager()
     {
         $_SERVER['SERVER_NAME'] = 'test-server.com';
-        $configuration = new \Slab\Configuration\Configuration();
-        $configuration->setCascadingSearchDirectories([
-            __DIR__ . '/data/site1',
-            __DIR__ . '/data/site2'
-        ]);
 
-        $manager = new \Slab\Configuration\Manager($configuration);
+        $manager = new \Slab\Configuration\Manager();
+        $manager
+            ->setFileDirectories([
+                __DIR__ . '/data/site1',
+                __DIR__ . '/data/site2'
+            ])
+            ->loadConfiguration();
 
         $this->assertEquals(2, $manager->one);
         $this->assertEquals('my-site', $manager->site);

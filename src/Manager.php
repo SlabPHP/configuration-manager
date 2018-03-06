@@ -10,8 +10,13 @@
  */
 namespace Slab\Configuration;
 
-class Manager
+class Manager implements \Slab\Components\ConfigurationManagerInterface
 {
+    /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    private $log;
+
     /**
      * Configuration values
      *
@@ -20,25 +25,69 @@ class Manager
     private $_config = null;
 
     /**
-     * @var Configuration
+     * @var array
      */
-    private $configuration;
+    private $fileDirectories = [];
+
+    /**
+     * @var array
+     */
+    private $fileNames = [];
 
     /**
      * Constructor
-     * @param Configuration $configuration
      */
-    public function __construct(Configuration $configuration)
+    public function __construct()
     {
         $this->_config = new Parameter(null, 'Configuration');
 
-        $this->configuration = $configuration;
+        $this->fileDirectories = [getcwd() . '/configs'];
+        $this->fileNames = ['default.php', $_SERVER['SERVER_NAME'] . '.php'];
+    }
 
-        $fileList = $this->buildFileList($this->configuration->getCascadingSearchDirectories(), $this->configuration->getFileList());
+    /**
+     * @param \Psr\Log\LoggerInterface $log
+     * @return $this
+     */
+    public function setLogger(\Psr\Log\LoggerInterface $log)
+    {
+        $this->log = $log;
+
+        return $this;
+    }
+
+    /**
+     * @param $directories
+     * @return $this
+     */
+    public function setFileDirectories($directories)
+    {
+        $this->fileDirectories = $directories;
+
+        return $this;
+    }
+
+    /**
+     * @param $filenames
+     * @return $this
+     */
+    public function setFileNames($filenames)
+    {
+        $this->fileNames = $filenames;
+
+        return $this;
+    }
+
+    /**
+     * Load configurations
+     */
+    public function loadConfiguration()
+    {
+        $fileList = $this->buildFileList($this->fileDirectories, $this->fileNames);
 
         $this->parseConfigurationFiles($fileList);
 
-        $this->mergeConfigurationOption($this->_config, 'configurationPaths', $this->configuration->getCascadingSearchDirectories());
+        $this->mergeConfigurationOption($this->_config, 'configurationPaths', $this->fileDirectories);
     }
 
     /**
@@ -53,19 +102,6 @@ class Manager
         }
 
         $this->parseConfigurationFiles($configurationFile);
-    }
-
-    /**
-     * Build configuration from path and files
-     *
-     * @param $paths
-     * @param $files
-     */
-    public function buildConfiguration($paths, $files)
-    {
-        $fileList = $this->buildFileList($paths, $files);
-
-        $this->parseConfigurationFiles($fileList);
     }
 
     /**
@@ -95,7 +131,7 @@ class Manager
     /**
      * Go through each configuration directory and get the data
      *
-     * @param string[] $hierarchyConfigPaths
+     * @param string[] $fileList
      */
     private function parseConfigurationFiles($fileList)
     {

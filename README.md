@@ -10,16 +10,13 @@ Include this project with composer:
     
 ## Usage
 
-Configure the class and create a manager.
+Create and configure the manager.
     
-    $configuration = new \Slab\Configuration\Configuration();
-    $configuration->setCascadingSearchDirectories([
-        '/some/directory',
-        '/some/other/directory'
-    ]);
-    $configuration->setFileList(['default.php', 'override.php']);
-
     $manager = new \Slab\Configuration\Manager($configuration);
+    $manager
+        ->setFileDirectories(['/some/directory', '/some/other/directory'])
+        ->loadConfiguration();
+    
 
 This will instantiate a configuration manager that will look for "php configuration" files in the following directories:
 

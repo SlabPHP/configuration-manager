@@ -41,7 +41,7 @@ class Manager implements \Slab\Components\ConfigurationManagerInterface
     {
         $this->_config = new Parameter(null, 'Configuration');
 
-        $this->fileDirectories = [getcwd() . '/configs'];
+        $this->fileDirectories = [getcwd() . '/config'];
         $this->fileNames = ['default.php', $_SERVER['SERVER_NAME'] . '.php'];
     }
 

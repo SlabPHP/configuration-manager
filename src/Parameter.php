@@ -77,7 +77,7 @@ class Parameter
     /**
      * Magic get function for getting configuration values
      *
-     * @param string $value
+     * @param string $key
      * @return mixed
      */
     public function __get($key)
@@ -85,8 +85,7 @@ class Parameter
         if (!empty($this->$key)) {
             return $this->$key;
         } else {
-            $this->getSystem()->log->error("A request for a configuration option '" . $this->getConfigurationParameterName($key) . "' was attempted but it has not been set.");
-            return false;
+            return null;
         }
     }
 
